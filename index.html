@@ -1,671 +1,973 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>9Onewave</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --white: #ffffff;
-      --off: #f7f7f5;
-      --border: #e4e4e0;
-      --ink: #111111;
-      --muted: #777770;
-      --accent: #1a56db;
-      --accent-light: #eff4ff;
-      --accent-hover: #1447c0;
-      --radius: 8px;
-      --nav-h: 68px;
-    }
-
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--white);
-      color: var(--ink);
-      font-size: 16px;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--nav-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 3rem;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      z-index: 100;
-    }
-
-    .logo {
-      font-family: 'Fraunces', serif;
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--ink);
-      text-decoration: none;
-      letter-spacing: -0.02em;
-      cursor: pointer;
-    }
-
-    .logo span { color: var(--accent); }
-
-    .nav-links {
-      display: flex;
-      gap: 0.25rem;
-      list-style: none;
-    }
-
-    .nav-links button {
-      background: none;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: color 0.2s, background 0.2s;
-    }
-
-    .nav-links button:hover,
-    .nav-links button.active {
-      color: var(--ink);
-      background: var(--off);
-    }
-
-    .nav-links button.active {
-      color: var(--accent);
-      background: var(--accent-light);
-    }
-
-    /* ── PAGES ── */
-    .page {
-      display: none;
-      padding-top: var(--nav-h);
-      animation: fadeUp 0.35s ease both;
-    }
-
-    .page.visible { display: block; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── SHARED LAYOUT ── */
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 2.5rem;
-    }
-
-    .section-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.25rem;
-    }
-
-    /* ── HOME PAGE ── */
-    .hero {
-      padding: 6rem 0 5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 5rem;
-      align-items: center;
-    }
-
-    .hero h1 {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(2.6rem, 5vw, 3.8rem);
-      font-weight: 600;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      color: var(--ink);
-      margin-bottom: 1.5rem;
-    }
-
-    .hero h1 em {
-      font-style: italic;
-      font-weight: 300;
-      color: var(--muted);
-    }
-
-    .hero p {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 480px;
-      margin-bottom: 2.5rem;
-      line-height: 1.75;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.8rem 1.75rem;
-      border-radius: var(--radius);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(26,86,219,0.28);
-    }
-
-    .btn-ghost {
-      background: none;
-      color: var(--ink);
-      border: 1.5px solid var(--border);
-    }
-
-    .btn-ghost:hover {
-      border-color: var(--ink);
-      transform: translateY(-1px);
-    }
-
-    .hero-visual {
-      background: var(--off);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      height: 380px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-    }
-
-    .hero-visual-icon {
-      font-size: 3.5rem;
-      line-height: 1;
-    }
-
-    .hero-visual p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-weight: 500;
-      text-align: center;
-      margin: 0;
-    }
-
-    /* Home preview grid */
-    .preview-section {
-      padding: 5rem 0;
-    }
-
-    .preview-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 3rem;
-    }
-
-    .preview-header h2 {
-      font-family: 'Fraunces', serif;
-      font-size: 2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    .preview-header button {
-      background: none;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      color: var(--accent);
-      cursor: pointer;
-      font-weight: 500;
-      padding: 0.4rem 0;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .preview-header button:hover { color: var(--accent-hover); }
-
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-
-    .preview-card {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 2rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .preview-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 8px 28px rgba(26,86,219,0.1);
-      transform: translateY(-3px);
-    }
-
-    .card-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
-      background: var(--accent-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-    }
-
-    .preview-card h3 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--ink);
-    }
-
-    .preview-card p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.6;
-      flex: 1;
-    }
-
-    .card-link {
-      font-size: 0.85rem;
-      color: var(--accent);
-      font-weight: 500;
-      text-decoration: none;
-    }
-
-    .card-link:hover { text-decoration: underline; }
-
-    /* ── PAGES PAGE ── */
-    .pages-header {
-      padding: 5rem 0 4rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .pages-header h1 {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
-    }
-
-    .pages-header p {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 520px;
-    }
-
-    .pages-list {
-      padding: 3.5rem 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .page-item {
-      display: grid;
-      grid-template-columns: 56px 1fr auto;
-      align-items: center;
-      gap: 1.75rem;
-      padding: 2rem 2.25rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      transition: all 0.25s ease;
-      background: var(--white);
-    }
-
-    .page-item:hover {
-      border-color: var(--accent);
-      box-shadow: 0 8px 28px rgba(26,86,219,0.09);
-      transform: translateX(4px);
-    }
-
-    .page-item-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 10px;
-      background: var(--accent-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      flex-shrink: 0;
-    }
-
-    .page-item-body h3 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 0.4rem;
-    }
-
-    .page-item-body p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.55;
-      margin-bottom: 0.75rem;
-    }
-
-    .tags {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--accent);
-      background: var(--accent-light);
-      padding: 0.25rem 0.65rem;
-      border-radius: 4px;
-    }
-
-    .page-item-cta a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.7rem 1.4rem;
-      border: 1.5px solid var(--accent);
-      border-radius: var(--radius);
-      color: var(--accent);
-      font-size: 0.88rem;
-      font-weight: 500;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-
-    .page-item-cta a:hover {
-      background: var(--accent);
-      color: white;
-    }
-
-    /* CTA strip */
-    .cta-strip {
-      background: var(--off);
-      border-top: 1px solid var(--border);
-      padding: 4rem 0;
-      text-align: center;
-    }
-
-    .cta-strip h2 {
-      font-family: 'Fraunces', serif;
-      font-size: 2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.75rem;
-    }
-
-    .cta-strip p {
-      font-size: 1rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 3rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    footer p { font-size: 0.85rem; color: var(--muted); }
-
-    footer a {
-      font-size: 0.85rem;
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    footer a:hover { color: var(--ink); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 800px) {
-      nav { padding: 0 1.25rem; }
-      .logo { font-size: 1.2rem; }
-      .nav-links button { padding: 0.45rem 0.7rem; font-size: 0.85rem; }
-
-      .container { padding: 0 1.25rem; }
-
-      .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-
-      .hero-visual { height: 220px; }
-
-      .preview-grid { grid-template-columns: 1fr; }
-
-      .page-item { grid-template-columns: 44px 1fr; }
-      .page-item-cta { grid-column: 1 / -1; }
-
-      footer { flex-direction: column; gap: 0.75rem; text-align: center; }
-    }
-  </style>
-</head>
-<body>
-
-  <nav>
-    <a class="logo" onclick="show('home')">9<span>One</span>wave</a>
-    <ul class="nav-links">
-      <li><button id="nav-home"  onclick="show('home')"  class="active">Home</button></li>
-      <li><button id="nav-pages" onclick="show('pages')">Pages</button></li>
-      <li><button id="nav-about" onclick="show('about')">About</button></li>
-    </ul>
-  </nav>
-
-  <!-- ══ HOME ══ -->
-  <div id="page-home" class="page visible">
-    <div class="container">
-      <div class="hero">
-        <div class="hero-inner">
+ <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>9Onewave — Web Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.17/dist/lenis.css">
+  
+    <style>
+      /* ─── ROOT ─── */
+      :root {
+        --bg: #0c0b09;
+        --bg2: #111009;
+        --peach-bg: #f2e2cf;
+        --peach: #e8a882;
+        --peach-dark: #c4845a;
+        --peach-deep: #9b5e35;
+        --cream: #f0e8df;
+        --muted: #6b6056;
+        --muted-light: #a0917f;
+        --border: rgba(255,255,255,0.07);
+        --border-peach: rgba(196,132,90,0.2);
+        --border-light: rgba(0,0,0,0.1);
+        --nav-h: 64px;
+      }
+  
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: auto; }
+  
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--cream);
+        font-size: 16px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        cursor: none;
+      }
+  
+      /* ─── SELECTION ─── */
+      ::selection { background: #e8a882; color: #1a1612; }
+      ::-moz-selection { background: #e8a882; color: #1a1612; }
+  
+      /* ─── CURSOR ─── */
+      .cursor {
+        position: fixed;
+        width: 10px; height: 10px;
+        background: var(--peach);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width .25s, height .25s, background .25s;
+        will-change: transform;
+      }
+      .cursor.big { width: 5px; height: 5px; }
+  
+      .cursor-ring {
+        position: fixed;
+        width: 38px; height: 38px;
+        border: 1.5px solid rgba(232,168,130,.45);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%,-50%);
+        transition: width .4s, height .4s, border-color .3s;
+        will-change: transform;
+      }
+      .cursor-ring.big { width: 56px; height: 56px; border-color: rgba(232,168,130,.25); }
+  
+      /* ─── SCROLL BAR ─── */
+      .scroll-bar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 2px;
+        width: 100%;
+        background: linear-gradient(90deg, var(--peach), var(--peach-dark));
+        z-index: 1001;
+        transform-origin: left;
+        transform: scaleX(0);
+      }
+  
+      /* ─── NAV ─── */
+      nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: var(--nav-h);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2.5rem;
+        z-index: 100;
+        transition: background .4s;
+      }
+      nav.scrolled {
+        background: rgba(12,11,9,.85);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+      }
+      nav.is-light {
+        background: rgba(242,226,207,.85);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(196,132,90,.15);
+      }
+  
+      .logo {
+        font-family: 'DM Sans', sans-serif;
+        font-size: .85rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--cream);
+        text-decoration: none;
+        transition: color .3s;
+      }
+      .logo span { color: var(--peach); }
+      nav.is-light .logo { color: #1a1410; }
+  
+      .nav-pills {
+        display: flex;
+        gap: .35rem;
+        background: rgba(255,255,255,.05);
+        border: 1px solid var(--border);
+        padding: .35rem;
+        border-radius: 100px;
+        transition: background .4s, border-color .4s;
+      }
+      nav.is-light .nav-pills {
+        background: rgba(0,0,0,.05);
+        border-color: rgba(0,0,0,.1);
+      }
+  
+      .nav-pill {
+        font-family: 'DM Sans', sans-serif;
+        font-size: .82rem;
+        font-weight: 500;
+        color: var(--muted-light);
+        background: none;
+        border: none;
+        padding: .4rem 1.1rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: color .25s, background .25s;
+      }
+      .nav-pill:hover { color: var(--cream); }
+      .nav-pill.active { color: var(--bg); background: var(--cream); }
+      nav.is-light .nav-pill { color: #7a6454; }
+      nav.is-light .nav-pill:hover { color: #1a1410; }
+      nav.is-light .nav-pill.active { color: #fff; background: #1a1410; }
+  
+      .nav-gh {
+        font-size: .82rem;
+        font-weight: 500;
+        color: var(--muted-light);
+        text-decoration: none;
+        transition: color .25s;
+      }
+      .nav-gh:hover { color: var(--cream); }
+      nav.is-light .nav-gh { color: #7a6454; }
+      nav.is-light .nav-gh:hover { color: #1a1410; }
+  
+      /* ─── HERO ─── */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: calc(var(--nav-h) + 3.5rem) 2.5rem 3rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: '';
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(ellipse 90% 70% at 65% 35%, rgba(232,168,130,.055) 0%, transparent 65%),
+          radial-gradient(ellipse 60% 90% at 85% 85%, rgba(196,132,90,.04) 0%, transparent 55%);
+        pointer-events: none;
+      }
+      /* grid lines */
+      .hero::after {
+        content: '';
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 80px 80px;
+        mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+        opacity: .4;
+        pointer-events: none;
+      }
+  
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative; z-index: 1;
+      }
+      .hero-tag {
+        font-size: .72rem;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--peach);
+      }
+      .hero-desc {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(1rem, 2.2vw, 1.65rem);
+        font-weight: 300;
+        color: var(--muted-light);
+        line-height: 1.3;
+        text-align: right;
+        max-width: 360px;
+      }
+      .hero-desc em { font-style: italic; color: var(--cream); }
+  
+      .hero-bottom {
+        position: relative; z-index: 1;
+      }
+      .hero-name {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(5rem, 17vw, 19rem);
+        font-weight: 600;
+        line-height: .88;
+        letter-spacing: -.04em;
+        color: var(--cream);
+        overflow: hidden;
+      }
+      .hero-name .highlight { color: var(--peach); }
+  
+      .hero-rule {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.75rem;
+        padding-top: 1.75rem;
+        border-top: 1px solid var(--border);
+      }
+      .hero-rule p { font-size: .88rem; color: var(--muted); }
+      .scroll-cue {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        font-size: .75rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .scroll-cue::before {
+        content: '';
+        display: block;
+        width: 32px; height: 1px;
+        background: var(--muted);
+      }
+  
+      /* ─── INTRO ─── */
+      .intro {
+        padding: 9rem 2.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .intro-hl {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.4rem, 5.5vw, 5rem);
+        font-weight: 300;
+        line-height: 1.1;
+        letter-spacing: -.03em;
+        color: var(--cream);
+        margin-bottom: 4rem;
+      }
+      .intro-hl strong { font-weight: 600; color: var(--peach); }
+      .intro-hl em { font-style: italic; color: var(--muted-light); }
+  
+      .intro-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+        padding-top: 3.5rem;
+        border-top: 1px solid var(--border);
+      }
+      .intro-grid p {
+        font-size: 1rem;
+        color: var(--muted-light);
+        line-height: 1.85;
+      }
+      .stat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      .stat h3 {
+        font-family: 'Fraunces', serif;
+        font-size: 2.8rem;
+        font-weight: 600;
+        color: var(--cream);
+        line-height: 1;
+        margin-bottom: .4rem;
+      }
+      .stat h3 span { color: var(--peach); }
+      .stat p { font-size: .82rem; color: var(--muted); }
+  
+      /* ─── PROJECTS ─── */
+      .projects {
+        padding: 6rem 2.5rem 8rem;
+      }
+      .projects-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-bottom: 2.5rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2.5rem;
+      }
+      .section-label {
+        font-size: .7rem;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--peach);
+        margin-bottom: 1rem;
+      }
+      .section-label.dark { color: var(--peach-dark); }
+  
+      .projects-head h2 {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 600;
+        letter-spacing: -.03em;
+      }
+      .projects-head p { font-size: .88rem; color: var(--muted-light); max-width: 250px; text-align: right; }
+  
+      /* Filter */
+      .filters {
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+        margin-bottom: 3.5rem;
+      }
+      .f-btn {
+        font-family: 'DM Sans', sans-serif;
+        font-size: .78rem;
+        font-weight: 500;
+        padding: .38rem 1rem;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--muted-light);
+        cursor: pointer;
+        transition: all .25s;
+      }
+      .f-btn:hover { border-color: var(--peach); color: var(--peach); background: rgba(232,168,130,.06); }
+      .f-btn.on { border-color: var(--peach); color: var(--bg); background: var(--peach); }
+  
+      /* Project rows */
+      .proj-row {
+        display: grid;
+        grid-template-columns: 72px 1fr 40px;
+        align-items: center;
+        gap: 2rem;
+        padding: 2.25rem 0;
+        border-bottom: 1px solid var(--border);
+        text-decoration: none;
+        color: inherit;
+        transition: padding-left .35s cubic-bezier(.23,1,.32,1);
+      }
+      .proj-row:first-of-type { border-top: 1px solid var(--border); }
+      .proj-row:hover { padding-left: 1.25rem; }
+  
+      .proj-num {
+        font-family: 'Fraunces', serif;
+        font-size: .88rem;
+        font-weight: 300;
+        font-style: italic;
+        color: var(--muted);
+      }
+      .proj-body h3 {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(1.35rem, 3vw, 2.4rem);
+        font-weight: 600;
+        letter-spacing: -.02em;
+        color: var(--cream);
+        line-height: 1.1;
+        margin-bottom: .5rem;
+        transition: color .3s;
+      }
+      .proj-row:hover .proj-body h3 { color: var(--peach); }
+      .proj-body p { font-size: .88rem; color: var(--muted-light); line-height: 1.6; max-width: 500px; margin-bottom: .75rem; }
+      .proj-tags { display: flex; gap: .35rem; flex-wrap: wrap; }
+      .ptag {
+        font-size: .7rem;
+        font-weight: 500;
+        padding: .2rem .6rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        color: var(--muted-light);
+        transition: border-color .3s, color .3s;
+      }
+      .proj-row:hover .ptag { border-color: var(--border-peach); color: var(--peach); }
+      .proj-arrow {
+        font-size: 1.4rem;
+        color: var(--muted);
+        transition: transform .3s, color .3s;
+      }
+      .proj-row:hover .proj-arrow { transform: translate(5px,-5px); color: var(--peach); }
+      .proj-row.hidden { display: none; }
+  
+      /* ─── ABOUT (peach) ─── */
+      .about {
+        background: var(--peach-bg);
+        color: #1a1410;
+        padding: 9rem 2.5rem;
+      }
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7rem;
+        margin-top: 4rem;
+      }
+      .about-hl {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.4rem, 5vw, 4rem);
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -.03em;
+        color: #1a1410;
+        margin-bottom: 2rem;
+      }
+      .about-hl em { font-style: italic; font-weight: 300; color: #7a6454; }
+      .about-p {
+        font-size: 1rem;
+        color: #4a3c30;
+        line-height: 1.85;
+        margin-bottom: 1.25rem;
+      }
+      .gh-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+        margin-top: 1.5rem;
+        font-size: .88rem;
+        font-weight: 600;
+        color: #1a1410;
+        text-decoration: none;
+        padding: .8rem 1.6rem;
+        border: 1.5px solid rgba(26,20,16,.2);
+        border-radius: 100px;
+        transition: all .25s;
+      }
+      .gh-btn:hover { background: #1a1410; color: var(--peach); border-color: #1a1410; }
+  
+      .about-right { padding-top: .5rem; }
+      .stack-grid {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: .85rem;
+        margin-top: 1rem;
+      }
+      .stack-item {
+        padding: 1.1rem .75rem;
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        text-align: center;
+        transition: all .25s;
+        background: rgba(255,255,255,.35);
+      }
+      .stack-item:hover { border-color: var(--peach-dark); background: rgba(255,255,255,.65); transform: translateY(-2px); }
+      .stack-item .si { font-size: 1.35rem; margin-bottom: .3rem; }
+      .stack-item .sn { font-size: .75rem; font-weight: 600; color: #1a1410; }
+  
+      .ints { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .6rem; }
+      .int-row {
+        display: flex; align-items: center; gap: .85rem;
+        padding: .9rem 1.1rem;
+        border-radius: 8px;
+        background: rgba(255,255,255,.45);
+        transition: background .25s;
+      }
+      .int-row:hover { background: rgba(255,255,255,.75); }
+      .int-row .ico { font-size: 1.1rem; }
+      .int-row p { font-size: .88rem; color: #4a3c30; }
+  
+      /* ─── BIG NAME ─── */
+      .big-name-wrap {
+        background: var(--peach-bg);
+        padding: 1rem 2.5rem 5rem;
+        overflow: hidden;
+      }
+      .big-name {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(6rem, 19vw, 22rem);
+        font-weight: 700;
+        line-height: .88;
+        letter-spacing: -.05em;
+        color: transparent;
+        -webkit-text-stroke: 1.5px rgba(26,20,16,.18);
+        white-space: nowrap;
+      }
+      .big-name .bn-col {
+        -webkit-text-stroke: 1.5px var(--peach-dark);
+        color: transparent;
+      }
+  
+      /* ─── CTA ─── */
+      .cta-wrap {
+        padding: 9rem 2.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-wrap::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(232,168,130,.06) 0%, transparent 70%);
+      }
+      .cta-wrap h2 {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        font-weight: 600;
+        letter-spacing: -.035em;
+        color: var(--cream);
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      .cta-wrap h2 em { font-style: italic; font-weight: 300; color: var(--peach); }
+      .cta-wrap > p { font-size: 1rem; color: var(--muted-light); margin-bottom: 3rem; position: relative; }
+      .cta-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .7rem;
+        font-size: .95rem;
+        font-weight: 600;
+        color: var(--bg);
+        background: var(--peach);
+        text-decoration: none;
+        padding: .95rem 2.2rem;
+        border-radius: 100px;
+        transition: all .3s;
+        position: relative;
+      }
+      .cta-link:hover { background: var(--cream); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(232,168,130,.25); }
+  
+      /* ─── FOOTER ─── */
+      footer {
+        background: var(--bg);
+        padding: 4.5rem 2.5rem 3rem;
+        border-top: 1px solid var(--border);
+      }
+      .foot-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 4rem;
+        margin-bottom: 4rem;
+      }
+      .foot-col h4 {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 1.25rem;
+      }
+      .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+      .foot-col a { font-size: .88rem; color: var(--muted-light); text-decoration: none; transition: color .2s; }
+      .foot-col a:hover { color: var(--cream); }
+      .foot-col p { font-size: .88rem; color: var(--muted-light); line-height: 1.7; }
+      .foot-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+      }
+      .foot-bottom p { font-size: .78rem; color: var(--muted); }
+  
+      /* ─── RESPONSIVE ─── */
+      @media (max-width: 820px) {
+        nav { padding: 0 1.25rem; }
+        .hero { padding: calc(var(--nav-h) + 2.5rem) 1.25rem 2.5rem; }
+        .hero-desc { font-size: .9rem; max-width: 170px; }
+        .intro { padding: 5rem 1.25rem; }
+        .intro-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        .stat-grid { grid-template-columns: 1fr 1fr; }
+        .projects { padding: 4rem 1.25rem 5rem; }
+        .projects-head { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .projects-head p { text-align: left; }
+        .proj-row { grid-template-columns: 44px 1fr 28px; gap: 1rem; padding: 1.75rem 0; }
+        .about { padding: 5rem 1.25rem; }
+        .about-grid { grid-template-columns: 1fr; gap: 3.5rem; }
+        .stack-grid { grid-template-columns: repeat(3,1fr); }
+        .big-name-wrap { padding: 1rem 1.25rem 3rem; }
+        .cta-wrap { padding: 5rem 1.25rem; }
+        footer { padding: 3.5rem 1.25rem 2.5rem; }
+        .foot-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      }
+    </style>
+  </head>
+  <body>
+  
+    <div class="scroll-bar" id="scrollBar"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+  
+    <!-- ── NAV ── -->
+    <nav id="nav">
+      <a class="logo" id="logoBtn">9<span>One</span>wave</a>
+      <div class="nav-pills">
+        <button class="nav-pill active" data-target="homeAnchor">Home</button>
+        <button class="nav-pill" data-target="pagesAnchor">Pages</button>
+        <button class="nav-pill" data-target="aboutAnchor">About</button>
+      </div>
+      <a class="nav-gh" href="https://github.com/9Onewave" target="_blank">GitHub →</a>
+    </nav>
+  
+    <!-- ── HERO ── -->
+    <section id="homeAnchor">
+      <div class="hero" data-theme="dark">
+        <div class="hero-top">
+          <p class="hero-tag">Portfolio · 2026</p>
+          <div class="hero-desc">
+            Web developer<br/>
+            <em>&amp; builder of</em><br/>
+            cool things
+          </div>
+        </div>
+        <div class="hero-bottom">
+          <div class="hero-name" id="heroName">
+            9One<span class="highlight">wave</span>
+          </div>
+          <div class="hero-rule">
+            <p>4 projects · HTML · CSS · JS · React</p>
+            <p class="scroll-cue">scroll to explore</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- ── INTRO ── -->
+    <div class="intro" data-theme="dark">
+      <p class="section-label">About my work</p>
+      <h2 class="intro-hl">
+        I build <strong>modern web</strong><br/>
+        experiences that are<br/>
+        <em>fast, clean, and real</em>
+      </h2>
+      <div class="intro-grid">
+        <p>Web developer with a love for clean code and thoughtful design. I focus on building projects that are genuinely useful and look great doing it — from interactive games to movie trackers and beyond.</p>
+        <div class="stat-grid">
+          <div class="stat"><h3>4<span>+</span></h3><p>Projects built and shipped</p></div>
+          <div class="stat"><h3>100<span>%</span></h3><p>Passion poured in</p></div>
+          <div class="stat"><h3>∞</h3><p>Things left to build</p></div>
+          <div class="stat"><h3>0</h3><p>Lines of boring code (aim)</p></div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- ── PROJECTS ── -->
+    <section id="pagesAnchor">
+      <div class="projects" data-theme="dark">
+        <div class="projects-head">
           <div>
-            <p class="section-label">Portfolio</p>
-            <h1>I love creating<br/><em>web and stuff</em></h1>
-            <p>Web developer and engineering student based in Scotland. I build modern, responsive web applications with an eye for clean design and solid fundamentals.</p>
-            <div class="hero-actions">
-              <button class="btn btn-primary" onclick="show('pages')">View Pages</button>
-              <button class="btn btn-ghost" onclick="show('about')">About Me</button>
-            </div>
+            <p class="section-label">All Projects</p>
+            <h2>Pages</h2>
           </div>
-          <div class="hero-visual">
-            <div class="hero-visual-icon">🖥️</div>
-            <p>9Onewave<br/>github.io</p>
-          </div>
+          <p>Every web project I've built, linked and ready to explore.</p>
         </div>
-      </div>
-
-      <div class="preview-section">
-        <div class="preview-header">
-          <h2>Recent Projects</h2>
-          <button onclick="show('pages')">See all pages →</button>
+  
+        <div class="filters">
+          <button class="f-btn on" data-f="all">All</button>
+          <button class="f-btn" data-f="JavaScript">JavaScript</button>
+          <button class="f-btn" data-f="React">React</button>
+          <button class="f-btn" data-f="Educational">Educational</button>
+          <button class="f-btn" data-f="Game Dev">Game Dev</button>
         </div>
-        <div class="preview-grid">
-          <div class="preview-card">
-            <div class="card-icon">📝</div>
+  
+        <a class="proj-row" href="https://9onewave.github.io/unfiltered-blog/" target="_blank" data-tags="HTML CSS JavaScript">
+          <div class="proj-num">01</div>
+          <div class="proj-body">
             <h3>Unfiltered Blog</h3>
-            <p>A minimalist blogging platform focused on clean reading experiences without distractions.</p>
-            <a class="card-link" href="https://9onewave.github.io/unfiltered-blog/" target="_blank">Visit site →</a>
+            <p>A clean, distraction-free blogging platform designed so the writing always takes centre stage. Simple, elegant, focused on content.</p>
+            <div class="proj-tags">
+              <span class="ptag">HTML</span><span class="ptag">CSS</span><span class="ptag">JavaScript</span>
+            </div>
           </div>
-          <div class="preview-card">
-            <div class="card-icon">🎮</div>
+          <span class="proj-arrow">↗</span>
+        </a>
+  
+        <a class="proj-row" href="https://9onewave.github.io/playforge/" target="_blank" data-tags="JavaScript Game Dev Web API">
+          <div class="proj-num">02</div>
+          <div class="proj-body">
             <h3>PlayForge</h3>
-            <p>An interactive gaming platform and creative sandbox environment for building and playing.</p>
-            <a class="card-link" href="https://9onewave.github.io/playforge/" target="_blank">Visit site →</a>
+            <p>An interactive gaming platform and sandbox for building and playing games, with a focus on creative freedom and smooth UX.</p>
+            <div class="proj-tags">
+              <span class="ptag">JavaScript</span><span class="ptag">Web API</span><span class="ptag">Game Dev</span>
+            </div>
           </div>
-          <div class="preview-card">
-            <div class="card-icon">🎬</div>
+          <span class="proj-arrow">↗</span>
+        </a>
+  
+        <a class="proj-row" href="https://9onewave.github.io/cinematica/" target="_blank" data-tags="React API UI/UX">
+          <div class="proj-num">03</div>
+          <div class="proj-body">
             <h3>Cinematica</h3>
-            <p>Movie discovery platform with filtering and review features. Explore and manage your watchlist.</p>
-            <a class="card-link" href="https://9onewave.github.io/cinematica/" target="_blank">Visit site →</a>
+            <p>Movie discovery and review platform with advanced search and filtering. Explore films and build a personal watchlist with a polished interface.</p>
+            <div class="proj-tags">
+              <span class="ptag">React</span><span class="ptag">API</span><span class="ptag">UI/UX</span>
+            </div>
           </div>
-          <div class="preview-card">
-            <div class="card-icon">☀️</div>
-            <h3>Solar Systems</h3>
-            <p>Explore the Space</p>
-            <a class="card-link" href="https://9onewave.github.io/solar/" target="_blank">Visit site →</a>
+          <span class="proj-arrow">↗</span>
+        </a>
+  
+        <a class="proj-row" href="https://9onewave.github.io/solar/" target="_blank" data-tags="Educational Visualisation">
+          <div class="proj-num">04</div>
+          <div class="proj-body">
+            <h3>Solar System</h3>
+            <p>An interactive visual journey through our solar system — explore the Sun, planets, and their moons up close.</p>
+            <div class="proj-tags">
+              <span class="ptag">Educational</span><span class="ptag">Visualisation</span><span class="ptag">Space</span>
+            </div>
+          </div>
+          <span class="proj-arrow">↗</span>
+        </a>
+  
+      </div>
+    </section>
+  
+    <!-- ── ABOUT ── -->
+    <section id="aboutAnchor">
+      <div class="about" data-theme="light">
+        <p class="section-label dark">About Me</p>
+        <div class="about-grid">
+          <div>
+            <h2 class="about-hl">
+              Building things<br/>
+              <em>on the web,</em><br/>
+              one project<br/>
+              at a time
+            </h2>
+            <p class="about-p">I'm a web developer who loves crafting experiences that look great and feel even better to use. I care deeply about every detail — from the way a page loads to how an interaction makes you feel.</p>
+            <p class="about-p">My work spans blogs, games, movie platforms, and interactive spaces. Each project is a chance to push further, learn something new, and ship something I'm genuinely proud of.</p>
+            <a class="gh-btn" href="https://github.com/9Onewave" target="_blank">View all work on GitHub →</a>
+          </div>
+          <div class="about-right">
+            <p class="section-label dark">Tech Stack</p>
+            <div class="stack-grid">
+              <div class="stack-item"><div class="si">🌐</div><div class="sn">HTML</div></div>
+              <div class="stack-item"><div class="si">🎨</div><div class="sn">CSS</div></div>
+              <div class="stack-item"><div class="si">⚡</div><div class="sn">JavaScript</div></div>
+              <div class="stack-item"><div class="si">⚛️</div><div class="sn">React</div></div>
+              <div class="stack-item"><div class="si">🔌</div><div class="sn">APIs</div></div>
+              <div class="stack-item"><div class="si">🐙</div><div class="sn">GitHub</div></div>
+            </div>
+            <p class="section-label dark" style="margin-top:2.5rem">Interests</p>
+            <div class="ints">
+              <div class="int-row"><span class="ico">🌌</span><p>Space &amp; the universe — endless fascination</p></div>
+              <div class="int-row"><span class="ico">🎮</span><p>Game development &amp; interactive experiences</p></div>
+              <div class="int-row"><span class="ico">✏️</span><p>Clean design and intuitive interfaces</p></div>
+            </div>
           </div>
         </div>
       </div>
+    </section>
+  
+    <!-- ── BIG NAME ── -->
+    <div class="big-name-wrap">
+      <div class="big-name" id="bigName">9One<span class="bn-col">wave</span></div>
     </div>
-    <footer>
-      <p>&copy; 2026 9Onewave</p>
-      <a href="https://github.com/9Onewave" target="_blank">GitHub →</a>
-    </footer>
-  </div>
-
-  <!-- ══ PAGES ══ -->
-  <div id="page-pages" class="page">
-    <div class="container">
-      <div class="pages-header">
-        <p class="section-label">All Projects</p>
-        <h1>Pages</h1>
-        <p>Every web project I've built, linked and ready to explore.</p>
-      </div>
-      <div class="pages-list">
-
-        <div class="page-item">
-          <div class="page-item-icon">📝</div>
-          <div class="page-item-body">
-            <h3>Unfiltered Blog</h3>
-            <p>A clean, distraction-free blogging platform designed so the writing always takes centre stage. Simple, elegant, and focused entirely on content.</p>
-            <div class="tags">
-              <span class="tag">HTML</span>
-              <span class="tag">CSS</span>
-              <span class="tag">JavaScript</span>
-            </div>
-          </div>
-          <div class="page-item-cta">
-            <a href="https://9onewave.github.io/unfiltered-blog/" target="_blank">Open site →</a>
-          </div>
-        </div>
-
-        <div class="page-item">
-          <div class="page-item-icon">🎮</div>
-          <div class="page-item-body">
-            <h3>PlayForge</h3>
-            <p>An interactive gaming platform and sandbox for building and playing games, with a focus on creative freedom and a smooth user experience.</p>
-            <div class="tags">
-              <span class="tag">JavaScript</span>
-              <span class="tag">Web API</span>
-              <span class="tag">Game Dev</span>
-            </div>
-          </div>
-          <div class="page-item-cta">
-            <a href="https://9onewave.github.io/playforge/" target="_blank">Open site →</a>
-          </div>
-        </div>
-
-        <div class="page-item">
-          <div class="page-item-icon">🎬</div>
-          <div class="page-item-body">
-            <h3>Cinematica</h3>
-            <p>Movie discovery and review platform with advanced search and filtering. Explore films and build a personal watchlist with a polished, modern interface.</p>
-            <div class="tags">
-              <span class="tag">React</span>
-              <span class="tag">API</span>
-              <span class="tag">UI/UX</span>
-            </div>
-          </div>
-          <div class="page-item-cta">
-            <a href="https://9onewave.github.io/cinematica/" target="_blank">Open site →</a>
-          </div>
-        </div>
-
-        <div class="page-item">
-          <div class="page-item-icon">☀️</div>
-          <div class="page-item-body">
-            <h3>Solar Systems</h3>
-            <p>Interactive educational tool exploring how solar PV systems work. Built using hands-on engineering knowledge of renewable energy and system design.</p>
-            <div class="tags">
-              <span class="tag">Educational</span>
-              <span class="tag">Visualisation</span>
-              <span class="tag">Energy Tech</span>
-            </div>
-          </div>
-          <div class="page-item-cta">
-            <a href="https://9onewave.github.io/solar/" target="_blank">Open site →</a>
-          </div>
-        </div>
-
-      </div>
+  
+    <!-- ── CTA ── -->
+    <div class="cta-wrap" data-theme="dark">
+      <p class="section-label" style="margin-bottom:1.5rem">Find me online</p>
+      <h2>Let's build<br/><em>something great</em></h2>
+      <p>All my projects are open and ready to explore.</p>
+      <a class="cta-link" href="https://github.com/9Onewave" target="_blank">github.com/9Onewave →</a>
     </div>
+  
+    <!-- ── FOOTER ── -->
     <footer>
-      <p>&copy; 2026 9Onewave</p>
-      <a href="https://github.com/9Onewave" target="_blank">GitHub →</a>
-    </footer>
-  </div>
-
-  <!-- ══ ABOUT ══ -->
-  <div id="page-about" class="page">
-    <div class="cta-strip">
-      <div class="container">
-        <h2>Find me on GitHub</h2>
-        <p>All my projects are open and available to explore.</p>
-        <a class="btn btn-primary" href="https://github.com/9Onewave" target="_blank">github.com/9Onewave →</a>
+      <div class="foot-grid">
+        <div class="foot-col">
+          <h4>Built with</h4>
+          <p>HTML · CSS · JavaScript · React · GSAP · Lenis Scroll</p>
+        </div>
+        <div class="foot-col">
+          <h4>Projects</h4>
+          <ul>
+            <li><a href="https://9onewave.github.io/unfiltered-blog/" target="_blank">Unfiltered Blog</a></li>
+            <li><a href="https://9onewave.github.io/playforge/" target="_blank">PlayForge</a></li>
+            <li><a href="https://9onewave.github.io/cinematica/" target="_blank">Cinematica</a></li>
+            <li><a href="https://9onewave.github.io/solar/" target="_blank">Solar System</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="https://github.com/9Onewave" target="_blank">GitHub</a></li>
+          </ul>
+        </div>
       </div>
-    </div>
-
-    <footer>
-      <p>&copy; 2026 9Onewave</p>
-      <a href="https://github.com/9Onewave" target="_blank">GitHub →</a>
+      <div class="foot-bottom">
+        <p>© 2026 9Onewave</p>
+        <p>Web developer &amp; builder</p>
+      </div>
     </footer>
-  </div>
-
-  <script>
-    function show(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
-      document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
-      document.getElementById('page-' + id).classList.add('visible');
-      document.getElementById('nav-' + id).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  </script>
-</body>
-</html>
+  
+    <!-- ── SCRIPTS ── -->
+    <script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js"></script>
+  
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+  
+      /* ─── LENIS ─── */
+      const lenis = new Lenis({
+        lerp: 0.1,
+        wheelMultiplier: 1,
+        gestureOrientation: 'vertical',
+        normalizeWheel: false,
+        smoothTouch: false,
+      });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(t => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+  
+      /* ─── CURSOR ─── */
+      const cur = document.getElementById('cursor');
+      const ring = document.getElementById('cursorRing');
+      const m = { x: 0, y: 0 }, cp = { x: 0, y: 0 }, rp = { x: 0, y: 0 };
+  
+      window.addEventListener('mousemove', e => { m.x = e.clientX; m.y = e.clientY; });
+  
+      gsap.ticker.add(() => {
+        const d1 = 1 - Math.pow(1 - .13, gsap.ticker.deltaRatio());
+        const d2 = 1 - Math.pow(1 - .07, gsap.ticker.deltaRatio());
+        cp.x += (m.x - cp.x) * d1; cp.y += (m.y - cp.y) * d1;
+        rp.x += (m.x - rp.x) * d2; rp.y += (m.y - rp.y) * d2;
+        gsap.set(cur,  { x: cp.x, y: cp.y });
+        gsap.set(ring, { x: rp.x, y: rp.y });
+      });
+  
+      document.querySelectorAll('a, button, .proj-row, .stack-item, .int-row').forEach(el => {
+        el.addEventListener('mouseenter', () => { cur.classList.add('big'); ring.classList.add('big'); });
+        el.addEventListener('mouseleave', () => { cur.classList.remove('big'); ring.classList.remove('big'); });
+      });
+  
+      /* ─── SCROLL PROGRESS ─── */
+      const bar = document.getElementById('scrollBar');
+      lenis.on('scroll', ({ progress }) => gsap.set(bar, { scaleX: progress }));
+  
+      /* ─── NAV: scroll + active + theme ─── */
+      const nav = document.getElementById('nav');
+      let lastScroll = 0;
+  
+      lenis.on('scroll', ({ scroll }) => {
+        nav.classList.toggle('scrolled', scroll > 60);
+        lastScroll = scroll;
+      });
+  
+      // Nav pill clicks
+      document.querySelectorAll('.nav-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          const target = document.getElementById(pill.dataset.target);
+          if (target) lenis.scrollTo(target, { offset: -80, duration: 1.4 });
+        });
+      });
+      document.getElementById('logoBtn').addEventListener('click', () => lenis.scrollTo(0, { duration: 1.4 }));
+  
+      // Intersection observer for active pill + nav light/dark
+      const anchors = ['homeAnchor', 'pagesAnchor', 'aboutAnchor'];
+      const pillMap = {};
+      document.querySelectorAll('.nav-pill').forEach(p => { pillMap[p.dataset.target] = p; });
+  
+      const anchorObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+            if (pillMap[e.target.id]) pillMap[e.target.id].classList.add('active');
+          }
+        });
+      }, { rootMargin: '-35% 0px -55% 0px' });
+  
+      anchors.forEach(id => { const el = document.getElementById(id); if (el) anchorObs.observe(el); });
+  
+      // Light nav on about/big-name section
+      const lightObs = new IntersectionObserver(entries => {
+        entries.forEach(e => nav.classList.toggle('is-light', e.isIntersecting));
+      }, { rootMargin: '-5% 0px -85% 0px' });
+      const aboutEl = document.getElementById('aboutAnchor');
+      if (aboutEl) lightObs.observe(aboutEl);
+  
+      /* ─── GSAP ANIMATIONS ─── */
+  
+      // Hero entrance
+      gsap.from('.hero-tag', { y: 24, opacity: 0, duration: 1, ease: 'power3.out', delay: .2 });
+      gsap.from('.hero-desc', { y: 24, opacity: 0, duration: 1, ease: 'power3.out', delay: .3 });
+      gsap.from('#heroName', { y: 80, opacity: 0, duration: 1.6, ease: 'power4.out', delay: .15 });
+      gsap.from('.hero-rule', { y: 20, opacity: 0, duration: .9, ease: 'power3.out', delay: .7 });
+  
+      // Intro
+      gsap.from('.intro-hl', {
+        scrollTrigger: { trigger: '.intro-hl', start: 'top 82%' },
+        y: 55, opacity: 0, duration: 1.1, ease: 'power3.out',
+      });
+      gsap.from('.intro-grid', {
+        scrollTrigger: { trigger: '.intro-grid', start: 'top 82%' },
+        y: 40, opacity: 0, duration: 1, ease: 'power3.out',
+      });
+      gsap.from('.stat', {
+        scrollTrigger: { trigger: '.stat-grid', start: 'top 85%' },
+        y: 28, opacity: 0, duration: .7, stagger: .12, ease: 'power3.out',
+      });
+  
+      // Projects
+      document.querySelectorAll('.proj-row').forEach((row, i) => {
+        gsap.from(row, {
+          scrollTrigger: { trigger: row, start: 'top 90%' },
+          x: -35, opacity: 0, duration: .75, delay: i * .04, ease: 'power3.out',
+        });
+      });
+  
+      // About
+      gsap.from('.about-hl', {
+        scrollTrigger: { trigger: '.about-hl', start: 'top 82%' },
+        y: 50, opacity: 0, duration: 1.1, ease: 'power3.out',
+      });
+      gsap.from('.about-p', {
+        scrollTrigger: { trigger: '.about-p', start: 'top 85%' },
+        y: 30, opacity: 0, duration: .9, stagger: .12, ease: 'power3.out',
+      });
+      gsap.from('.stack-item', {
+        scrollTrigger: { trigger: '.stack-grid', start: 'top 85%' },
+        scale: .88, opacity: 0, duration: .55, stagger: .06, ease: 'back.out(1.4)',
+      });
+      gsap.from('.int-row', {
+        scrollTrigger: { trigger: '.ints', start: 'top 85%' },
+        x: 30, opacity: 0, duration: .65, stagger: .1, ease: 'power3.out',
+      });
+  
+      // Big name parallax
+      gsap.fromTo('#bigName',
+        { x: -120 },
+        { scrollTrigger: { trigger: '.big-name-wrap', start: 'top bottom', end: 'bottom top', scrub: 1.8 }, x: 120, ease: 'none' }
+      );
+  
+      // CTA
+      gsap.from('.cta-wrap h2', {
+        scrollTrigger: { trigger: '.cta-wrap', start: 'top 78%' },
+        y: 60, opacity: 0, duration: 1.1, ease: 'power3.out',
+      });
+      gsap.from('.cta-link', {
+        scrollTrigger: { trigger: '.cta-link', start: 'top 88%' },
+        y: 25, opacity: 0, duration: .8, ease: 'power3.out',
+      });
+  
+      /* ─── FILTER ─── */
+      document.querySelectorAll('.f-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('on'));
+          btn.classList.add('on');
+          const f = btn.dataset.f;
+          document.querySelectorAll('.proj-row').forEach(row => {
+            row.classList.toggle('hidden', f !== 'all' && !row.dataset.tags.includes(f));
+          });
+        });
+      });
+    </script>
+  </body>
+  </html>
