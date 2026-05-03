@@ -1,10 +1,999 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>9Onewave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --white: #ffffff;
+      --off: #f7f7f5;
+      --border: #e4e4e0;
+      --ink: #111111;
+      --muted: #777770;
+      --accent: #1a56db;
+      --accent-light: #eff4ff;
+      --accent-hover: #1447c0;
+      --radius: 8px;
+      --nav-h: 68px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links button {
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links button:hover,
+    .nav-links button.active {
+      color: var(--ink);
+      background: var(--off);
+    }
+
+    .nav-links button.active {
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    /* ── PAGES ── */
+    .page {
+      display: none;
+      padding-top: var(--nav-h);
+      animation: fadeUp 0.35s ease both;
+    }
+
+    .page.visible { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SHARED LAYOUT ── */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── HOME PAGE ── */
+    .hero {
+      padding: 6rem 0 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.6rem, 5vw, 3.8rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.8rem 1.75rem;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26,86,219,0.28);
+    }
+
+    .btn-ghost {
+      background: none;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    .hero-visual {
+      background: var(--off);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .hero-visual-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+    }
+
+    .hero-visual p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+      text-align: center;
+      margin: 0;
+    }
+
+    /* Stats row */
+    .stats-row {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0;
+    }
+
+    .stat {
+      flex: 1;
+      padding: 0 2.5rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: none; }
+
+    .stat-number {
+      font-family: 'Fraunces', serif;
+      font-size: 2.6rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Home preview grid */
+    .preview-section {
+      padding: 5rem 0;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+    }
+
+    .preview-header h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .preview-header button {
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 500;
+      padding: 0.4rem 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .preview-header button:hover { color: var(--accent-hover); }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .preview-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .preview-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 28px rgba(26,86,219,0.1);
+      transform: translateY(-3px);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .preview-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .preview-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card-link {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .card-link:hover { text-decoration: underline; }
+
+    /* ── PAGES PAGE ── */
+    .pages-header {
+      padding: 5rem 0 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pages-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .pages-header p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .pages-list {
+      padding: 3.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .page-item {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      align-items: center;
+      gap: 1.75rem;
+      padding: 2rem 2.25rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.25s ease;
+      background: var(--white);
+    }
+
+    .page-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 28px rgba(26,86,219,0.09);
+      transform: translateX(4px);
+    }
+
+    .page-item-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .page-item-body h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.4rem;
+    }
+
+    .page-item-body p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 0.75rem;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+    }
+
+    .page-item-cta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.7rem 1.4rem;
+      border: 1.5px solid var(--accent);
+      border-radius: var(--radius);
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .page-item-cta a:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* ── ABOUT PAGE ── */
+    .about-hero {
+      padding: 5.5rem 0 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .about-hero p {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .about-aside {
+      background: var(--off);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+    }
+
+    .about-aside h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--muted); }
+    .info-row span:last-child { font-weight: 500; color: var(--ink); }
+
+    .about-sections {
+      padding: 5rem 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .about-block h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.75rem;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .timeline-item {
+      padding-left: 1.5rem;
+      border-left: 2px solid var(--border);
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .timeline-item h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-item .inst {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-item .yr {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-item p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .skills-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .skill-block {
+      background: var(--off);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .skill-block:hover { border-color: var(--accent); }
+
+    .skill-block h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.9rem;
+    }
+
+    .skill-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .chip {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+    }
+
+    /* CTA strip */
+    .cta-strip {
+      background: var(--off);
+      border-top: 1px solid var(--border);
+      padding: 4rem 0;
+      text-align: center;
+    }
+
+    .cta-strip h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-strip p {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p { font-size: 0.85rem; color: var(--muted); }
+
+    footer a {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--ink); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      nav { padding: 0 1.25rem; }
+      .logo { font-size: 1.2rem; }
+      .nav-links button { padding: 0.45rem 0.7rem; font-size: 0.85rem; }
+
+      .container { padding: 0 1.25rem; }
+
+      .hero-inner,
+      .about-hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      .hero-visual { height: 220px; }
+
+      .stats-row { flex-direction: column; gap: 1.5rem; }
+      .stat { padding: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; }
+      .stat:last-child { border-bottom: none; padding-bottom: 0; }
+
+      .preview-grid { grid-template-columns: 1fr; }
+
+      .page-item { grid-template-columns: 44px 1fr; }
+      .page-item-cta { grid-column: 1 / -1; }
+
+      .two-col { grid-template-columns: 1fr; gap: 3rem; }
+
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to my site</h1>
-  <p>This is my GitHub Pages homepage.</p>
+
+  <nav>
+    <a class="logo" onclick="show('home')">9<span>One</span>wave</a>
+    <ul class="nav-links">
+      <li><button id="nav-home"  onclick="show('home')"  class="active">Home</button></li>
+      <li><button id="nav-pages" onclick="show('pages')">Pages</button></li>
+      <li><button id="nav-about" onclick="show('about')">About</button></li>
+    </ul>
+  </nav>
+
+  <!-- ══ HOME ══ -->
+  <div id="page-home" class="page visible">
+    <div class="container">
+      <div class="hero">
+        <div class="hero-inner">
+          <div>
+            <p class="section-label">Portfolio</p>
+            <h1>Building things<br/><em>for the web</em></h1>
+            <p>Web developer and engineering student based in Scotland. I build modern, responsive web applications with an eye for clean design and solid fundamentals.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" onclick="show('pages')">View Pages</button>
+              <button class="btn btn-ghost" onclick="show('about')">About Me</button>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-visual-icon">🖥️</div>
+            <p>9Onewave<br/>github.io</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Live projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">18</div>
+          <div class="stat-label">Years old</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">HNC</div>
+          <div class="stat-label">Engineering Systems</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">2026</div>
+          <div class="stat-label">Graduating</div>
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <div class="preview-header">
+          <h2>Recent Projects</h2>
+          <button onclick="show('pages')">See all pages →</button>
+        </div>
+        <div class="preview-grid">
+          <div class="preview-card">
+            <div class="card-icon">📝</div>
+            <h3>Unfiltered Blog</h3>
+            <p>A minimalist blogging platform focused on clean reading experiences without distractions.</p>
+            <a class="card-link" href="https://9onewave.github.io/unfiltered-blog/" target="_blank">Visit site →</a>
+          </div>
+          <div class="preview-card">
+            <div class="card-icon">🎮</div>
+            <h3>PlayForge</h3>
+            <p>An interactive gaming platform and creative sandbox environment for building and playing.</p>
+            <a class="card-link" href="https://9onewave.github.io/playforge/" target="_blank">Visit site →</a>
+          </div>
+          <div class="preview-card">
+            <div class="card-icon">🎬</div>
+            <h3>Cinematica</h3>
+            <p>Movie discovery platform with filtering and review features. Explore and manage your watchlist.</p>
+            <a class="card-link" href="https://9onewave.github.io/cinematica/" target="_blank">Visit site →</a>
+          </div>
+          <div class="preview-card">
+            <div class="card-icon">☀️</div>
+            <h3>Solar Systems</h3>
+            <p>Educational tool exploring solar PV technology and renewable energy in real-world applications.</p>
+            <a class="card-link" href="https://9onewave.github.io/solar/" target="_blank">Visit site →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <p>&copy; 2026 9Onewave</p>
+      <a href="https://github.com/9Onewave" target="_blank">GitHub →</a>
+    </footer>
+  </div>
+
+  <!-- ══ PAGES ══ -->
+  <div id="page-pages" class="page">
+    <div class="container">
+      <div class="pages-header">
+        <p class="section-label">All Projects</p>
+        <h1>Pages</h1>
+        <p>Every web project I've built, linked and ready to explore.</p>
+      </div>
+      <div class="pages-list">
+
+        <div class="page-item">
+          <div class="page-item-icon">📝</div>
+          <div class="page-item-body">
+            <h3>Unfiltered Blog</h3>
+            <p>A clean, distraction-free blogging platform designed so the writing always takes centre stage. Simple, elegant, and focused entirely on content.</p>
+            <div class="tags">
+              <span class="tag">HTML</span>
+              <span class="tag">CSS</span>
+              <span class="tag">JavaScript</span>
+            </div>
+          </div>
+          <div class="page-item-cta">
+            <a href="https://9onewave.github.io/unfiltered-blog/" target="_blank">Open site →</a>
+          </div>
+        </div>
+
+        <div class="page-item">
+          <div class="page-item-icon">🎮</div>
+          <div class="page-item-body">
+            <h3>PlayForge</h3>
+            <p>An interactive gaming platform and sandbox for building and playing games, with a focus on creative freedom and a smooth user experience.</p>
+            <div class="tags">
+              <span class="tag">JavaScript</span>
+              <span class="tag">Web API</span>
+              <span class="tag">Game Dev</span>
+            </div>
+          </div>
+          <div class="page-item-cta">
+            <a href="https://9onewave.github.io/playforge/" target="_blank">Open site →</a>
+          </div>
+        </div>
+
+        <div class="page-item">
+          <div class="page-item-icon">🎬</div>
+          <div class="page-item-body">
+            <h3>Cinematica</h3>
+            <p>Movie discovery and review platform with advanced search and filtering. Explore films and build a personal watchlist with a polished, modern interface.</p>
+            <div class="tags">
+              <span class="tag">React</span>
+              <span class="tag">API</span>
+              <span class="tag">UI/UX</span>
+            </div>
+          </div>
+          <div class="page-item-cta">
+            <a href="https://9onewave.github.io/cinematica/" target="_blank">Open site →</a>
+          </div>
+        </div>
+
+        <div class="page-item">
+          <div class="page-item-icon">☀️</div>
+          <div class="page-item-body">
+            <h3>Solar Systems</h3>
+            <p>Interactive educational tool exploring how solar PV systems work. Built using hands-on engineering knowledge of renewable energy and system design.</p>
+            <div class="tags">
+              <span class="tag">Educational</span>
+              <span class="tag">Visualisation</span>
+              <span class="tag">Energy Tech</span>
+            </div>
+          </div>
+          <div class="page-item-cta">
+            <a href="https://9onewave.github.io/solar/" target="_blank">Open site →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <footer>
+      <p>&copy; 2026 9Onewave</p>
+      <a href="https://github.com/9Onewave" target="_blank">GitHub →</a>
+    </footer>
+  </div>
+
+  <!-- ══ ABOUT ══ -->
+  <div id="page-about" class="page">
+    <div class="container">
+      <div class="about-hero">
+        <div class="about-hero-inner">
+          <div>
+            <p class="section-label">About</p>
+            <h1>Developer &amp;<br/>Engineer</h1>
+            <p>I'm an 18-year-old web developer and engineering student based in Livingston, Scotland. I'm currently completing my HNC in Engineering Systems at West Lothian College, with plans to progress to Heriot-Watt University for Electrical &amp; Electronic Engineering or Robotics.</p>
+            <p>On the side, I build web projects through The Odin Project curriculum — working my way through HTML, CSS, JavaScript, and React. My background in engineering gives me a technical mindset that I bring into everything I build.</p>
+            <p>Outside of code and study, I'm into cycling, hiking, and fitness. I care about doing things properly — clean code, honest work, and continuous improvement.</p>
+          </div>
+          <div class="about-aside">
+            <h3>Quick Info</h3>
+            <div class="info-row">
+              <span>Location</span>
+              <span>Livingston, Scotland</span>
+            </div>
+            <div class="info-row">
+              <span>Age</span>
+              <span>18</span>
+            </div>
+            <div class="info-row">
+              <span>Current study</span>
+              <span>HNC Engineering</span>
+            </div>
+            <div class="info-row">
+              <span>Next step</span>
+              <span>HND → Heriot-Watt</span>
+            </div>
+            <div class="info-row">
+              <span>Certification</span>
+              <span>Mitsubishi Ecodan</span>
+            </div>
+            <div class="info-row">
+              <span>GitHub</span>
+              <span>9Onewave</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-sections">
+        <div class="two-col">
+          <div class="about-block">
+            <h2>Education</h2>
+            <div class="timeline">
+              <div class="timeline-item">
+                <h4>HNC Engineering Systems</h4>
+                <div class="inst">West Lothian College</div>
+                <div class="yr">Completing May 2026</div>
+                <p>Engineering systems, renewable energy design, and applied technical projects.</p>
+              </div>
+              <div class="timeline-item">
+                <h4>HND Engineering Systems</h4>
+                <div class="inst">West Lothian College</div>
+                <div class="yr">2026 – 2027</div>
+                <p>Advanced systems training and engineering design principles.</p>
+              </div>
+              <div class="timeline-item">
+                <h4>BEng Electrical &amp; Electronic Engineering</h4>
+                <div class="inst">Heriot-Watt University</div>
+                <div class="yr">2027 – 2029 (planned)</div>
+                <p>Entry at Year 3 via HND pathway. Target: EEE or Robotics &amp; Autonomous Systems.</p>
+              </div>
+              <div class="timeline-item">
+                <h4>Mitsubishi Electric Ecodan</h4>
+                <div class="inst">Certified Professional</div>
+                <div class="yr">Active</div>
+                <p>Heat pump design, application, installation, and commissioning.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-block">
+            <h2>Skills</h2>
+            <div class="skills-blocks">
+              <div class="skill-block">
+                <h4>Frontend Development</h4>
+                <div class="skill-chips">
+                  <span class="chip">HTML</span>
+                  <span class="chip">CSS</span>
+                  <span class="chip">JavaScript</span>
+                  <span class="chip">React</span>
+                </div>
+              </div>
+              <div class="skill-block">
+                <h4>Tools &amp; Workflow</h4>
+                <div class="skill-chips">
+                  <span class="chip">Git</span>
+                  <span class="chip">GitHub</span>
+                  <span class="chip">VSCode</span>
+                  <span class="chip">Linux</span>
+                  <span class="chip">Bash</span>
+                </div>
+              </div>
+              <div class="skill-block">
+                <h4>Engineering</h4>
+                <div class="skill-chips">
+                  <span class="chip">Systems Design</span>
+                  <span class="chip">Solar PV</span>
+                  <span class="chip">ASHP</span>
+                  <span class="chip">Energy Auditing</span>
+                  <span class="chip">Renewables</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-strip">
+      <div class="container">
+        <h2>Find me on GitHub</h2>
+        <p>All my projects are open and available to explore.</p>
+        <a class="btn btn-primary" href="https://github.com/9Onewave" target="_blank">github.com/9Onewave →</a>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 9Onewave</p>
+      <a href="https://github.com/9Onewave" target="_blank">GitHub →</a>
+    </footer>
+  </div>
+
+  <script>
+    function show(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+      document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('visible');
+      document.getElementById('nav-' + id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>
